@@ -1,0 +1,83 @@
+<html>
+<script src='can_draw.js'> </script>
+<script src='anim_and_draw.js'> </script>
+<script>
+
+// Add Parameters for animate and draw routines.
+
+NUM_OBJECTS = 100;
+var curX = 30;
+var curY = 40;
+var dCurX = 10;
+var dCurY= 9;
+var objects = new Array(NUM_OBJECTS);
+var canDraw = null;
+
+function adjustCurX(speed)
+{
+    curX += dCurX;
+    curY += dCurY;
+    if(curX > canDraw.getXSize())
+    {
+        curX = canDraw.getXSize();
+        dCurX = - Math.random() + 0.01;
+    }
+    if (curX < 0)
+    {
+        curX = 0;
+        dCurX = Math.random() + 0.01;
+    }
+    
+    if(curY > canDraw.getYSize())
+    {
+        curY = canDraw.getYSize();
+        dCurY = - Math.random() + 0.01;
+    }
+    if (curY < 0)
+    {
+        curY = 0;
+        dCurY = Math.random() + 0.01;
+    }
+    mag = Math.sqrt(dCurX * dCurX + dCurY * dCurY);
+    
+    dCurX = (speed * dCurX)/mag;
+    dCurY = (speed * dCurY)/mag;
+}
+
+function buildObjects()
+{
+    for(var i = 0; i < NUM_OBJECTS; i++)
+    {
+        var x = Math.random() * canDraw.getXSize();
+        var y = Math.random() * canDraw.getYSize();
+        var dx = Math.random() * 1 - .5;
+        var dy = Math.random() * 1 - .5;
+        objects[i] = {x: x, y: y, dx: dx, dy: dy, r: 6};
+    }
+    curX = Math.random() * canDraw.getXSize();
+    curY = Math.random() * canDraw.getYSize()
+}
+
+
+function init()
+{
+    canDraw = new CanDraw('canvas');
+    canDraw.drawObjects = drawObjectsCELLS;
+    canDraw.animateObjects = function() { 
+       adjustCurX(Math.random() * 3 + 1.0);
+       animateObjectsBLOBS();
+    }
+    
+    buildObjects();
+
+    canDraw.run();
+};
+
+
+
+</script>
+
+<body onload="init();">  
+<canvas id="canvas" width="600" height="120"></canvas>
+</body>
+</html>
